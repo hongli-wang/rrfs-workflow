@@ -49,6 +49,11 @@ ln -snf ${FIXrrfs}/static_bec/${MESH_NAME}_L${nlevel}/vbal_${NTASKS} static_bec/
 #
 cp ${COMOUT}/ioda_bufr/det/* obs/.
 #
+# Prepare VarBC files and link CRTM for rad data assimilation 
+#
+cp /mnt/lfs5/BMC/wrfruc/Hongli.Wang/rad_bias_bc/* obs/
+ln -snf /mnt/lfs5/BMC/wrfruc/Hongli.Wang/MPAS_dev3/rrfs-workflow/sorc/RDASApp/fix/crtm/2.4.0 crtm
+#
 #  find ensemble forecasts based on user settings
 #
 if [[ "${HYB_WGT_ENS}" != "0" ]] && [[ "${HYB_WGT_ENS}" != "0.0" ]]; then # using ensembles

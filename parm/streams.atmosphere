@@ -66,14 +66,6 @@
                   packages="iau"
                   input_interval="initial_only" />
 
-<immutable_stream name="lbc_in"
-                  type="input"
-                  filename_template="lbc.$Y-$M-$D_$h.$m.$s.nc"
-                  filename_interval="input_interval"
-                  io_type="pnetcdf,cdf5"
-                  packages="limited_area"
-                  input_interval="@lbc_interval@:00:00" />
-
 <immutable_stream name="ugwp_oro_data_in"
                   type="input"
                   filename_template="ugwp_oro_data.nc"

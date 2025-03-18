@@ -10,19 +10,4 @@
                   packages="initial_conds"
                   output_interval="initial_only" />
 
-<immutable_stream name="surface"
-                  type="output"
-                  filename_template="x1.40962.sfc_update.nc"
-                  filename_interval="none"
-                  packages="sfc_update"
-                  output_interval="86400" />
-
-<immutable_stream name="lbc"
-                  type="output"
-                  filename_template="lbc.$Y-$M-$D_$h.$m.$s.nc"
-                  filename_interval="output_interval"
-                  io_type="pnetcdf,cdf5"
-                  packages="lbcs"
-                  output_interval="@lbc_interval@:00:00" />
-
 </streams>
