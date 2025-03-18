@@ -83,7 +83,6 @@ def fcst(xmlFile, expdir, do_ensemble=False, do_spinup=False):
   dependencies=f'''
   <dependency>
   <and>{timedep}
-    <taskdep task="prep_lbc{ensindexstr}" cycle_offset="0:00:00"/>
     {prep_ic_dep}
     {jedidep}
   </and>

@@ -65,9 +65,9 @@ def setup_xml(HOMErrfs, expdir):
         ioda_bufr(xmlFile,expdir)
       #
       ungrib_ic(xmlFile,expdir)
-      ungrib_lbc(xmlFile,expdir)
+      ###ungrib_lbc(xmlFile,expdir)
       ic(xmlFile,expdir)
-      lbc(xmlFile,expdir)
+      ###lbc(xmlFile,expdir)
       if os.getenv("DO_SPINUP","FALSE").upper() == "TRUE":
         prep_lbc(xmlFile,expdir)
         # spin up line
@@ -81,7 +81,7 @@ def setup_xml(HOMErrfs, expdir):
         save_fcst(xmlFile,expdir)
       else:
         prep_ic(xmlFile,expdir)
-        prep_lbc(xmlFile,expdir)
+        ###prep_lbc(xmlFile,expdir)
         if os.getenv("DO_JEDI","FALSE").upper()=="TRUE":
           jedivar(xmlFile,expdir)
         fcst(xmlFile,expdir)
@@ -99,11 +99,11 @@ def setup_xml(HOMErrfs, expdir):
       if os.getenv("DO_IODA","FALSE").upper()=="TRUE":
         ioda_bufr(xmlFile,expdir)
       ungrib_ic(xmlFile,expdir,do_ensemble=True)
-      ungrib_lbc(xmlFile,expdir,do_ensemble=True)
+      ###ungrib_lbc(xmlFile,expdir,do_ensemble=True)
       ic(xmlFile,expdir,do_ensemble=True)
-      lbc(xmlFile,expdir,do_ensemble=True)
+      ###lbc(xmlFile,expdir,do_ensemble=True)
       prep_ic(xmlFile,expdir,do_ensemble=True)
-      prep_lbc(xmlFile,expdir,do_ensemble=True)
+      ###prep_lbc(xmlFile,expdir,do_ensemble=True)
       if os.getenv("DO_JEDI","FALSE").upper()=="TRUE":
         getkf_observer(xmlFile,expdir)
         getkf_solver(xmlFile,expdir)

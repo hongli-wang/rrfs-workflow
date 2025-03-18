@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Aloha! This file is to setup some top level experiment options
 #
-export NET=rrfs                    # rrfs, rtma, 
+export NET=grfs                    # rrfs, rtma, 
 export MESH_NAME=global15km         # conus12km, conus3km, atl3km, global15km, etc
 export WGF="det"   # working group function = "det", "enkf", "ens", "firewx"
-export EXP_NAME=global_hrly_15km
+export EXP_NAME=global_hrly_15km_t1
 export VERSION=$(cat ./VERSION)
-export TAG=d12km
-export OPSROOT=/mnt/lfs5/BMC/wrfruc/Hongli.Wang/OPSROOT/${EXP_NAME}
-export EXPDIR=${OPSROOT}/exp/rrfs${WGF}
+export TAG=d15km
+export OPSROOT=/mnt/lfs5/BMC/wrfruc/Hongli.Wang/OPSROOT_Global/${EXP_NAME}
+export EXPDIR=${OPSROOT}/exp/grfs${WGF}
 export COMROOT=${OPSROOT}/com      # task input and output data as well as logs
 export DATAROOT=${OPSROOT}/stmp    # task workdirs ($DATA) which to be removed immediately upon task completion unless KEEPDATA=yes
 #
@@ -54,12 +54,12 @@ export COLDSTART_CYCS="00 12"   # cycles to cold start from external models
 #export COLDSTART_CYCS="03 15"
 #export PRODSWITCH_CYCS="09 21"
 #
-export NODES_IC="<nodes>1:ppn=40</nodes>"
+export NODES_IC="<nodes>40:ppn=20</nodes>"
 export NODES_LBC="<nodes>1:ppn=40</nodes>"
-export NODES_FCST="<nodes>2:ppn=40</nodes>"
+export NODES_FCST="<nodes>40:ppn=20</nodes>"
 export NODES_MPASSIT="<nodes>1:ppn=40</nodes>"
 export NODES_UPP="<nodes>1:ppn=40</nodes>"
-export NODES_JEDIVAR="<nodes>4:ppn=20</nodes>"
+export NODES_JEDIVAR="<nodes>200:ppn=24</nodes>"
 #
 export WALLTIME_FCST="1:30:00"
 export WALLTIME_SAVE_FCST="1:30:00"
