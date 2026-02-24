@@ -5,6 +5,7 @@ import stat
 from rocoto_funcs.base import header_begin, header_entities, header_end, \
     wflow_begin, wflow_log, wflow_cycledefs, wflow_end
 from rocoto_funcs.smart_cycledefs import smart_cycledefs
+from rocoto_funcs.smart_post_groups import smart_post_groups
 from rocoto_funcs.ungrib_ic import ungrib_ic
 from rocoto_funcs.ungrib_lbc import ungrib_lbc
 from rocoto_funcs.ic import ic
@@ -46,6 +47,9 @@ def setup_xml(HOMErrfs, expdir):
     #
     # create cycledefs smartly
     dcCycledef = smart_cycledefs()
+    # create post groups smartly and update dcCycleDef accordingly
+    if os.getenv("DO_POST", "TRUE").upper() == "TRUE":
+        listPostGrpInfo = smart_post_groups(dcCycledef)
 
     fPath = f"{expdir}/rrfs.xml"
     with open(fPath, 'w') as xmlFile:
@@ -108,8 +112,9 @@ def setup_xml(HOMErrfs, expdir):
                     save_for_next(xmlFile, expdir)
             #
             if os.getenv("DO_POST", "TRUE").upper() == "TRUE":
-                mpassit(xmlFile, expdir)
-                upp(xmlFile, expdir)
+                for index, dcGrpInfo in enumerate(listPostGrpInfo):
+                    mpassit(xmlFile, expdir, index, dcGrpInfo)
+                    upp(xmlFile, expdir, index, dcGrpInfo)
             if os.getenv("DO_HOFX", "FALSE").upper() == "TRUE":
                 hofx(xmlFile, expdir)
 
@@ -149,12 +154,14 @@ def setup_xml(HOMErrfs, expdir):
             if os.getenv('DO_CYC', 'FALSE').upper() == "TRUE":
                 save_for_next(xmlFile, expdir, do_ensemble=True)
             if os.getenv("DO_POST", "TRUE").upper() == "TRUE":
-                mpassit(xmlFile, expdir, do_ensemble=True)
-                upp(xmlFile, expdir, do_ensemble=True)
+                for index, dcGrpInfo in enumerate(listPostGrpInfo):
+                    mpassit(xmlFile, expdir, index, dcGrpInfo, do_ensemble=True)
+                    upp(xmlFile, expdir, index, dcGrpInfo, do_ensemble=True)
             if do_ensmean_post == "TRUE":
                 ensmean(xmlFile, expdir)
-                mpassit(xmlFile, expdir, do_ensemble=True, do_ensmean_post=True)
-                upp(xmlFile, expdir, do_ensemble=True, do_ensmean_post=True)
+                for index, dcGrpInfo in enumerate(listPostGrpInfo):
+                    mpassit(xmlFile, expdir, index, dcGrpInfo, do_ensemble=True, do_ensmean_post=True)
+                    upp(xmlFile, expdir, index, dcGrpInfo, do_ensemble=True, do_ensmean_post=True)
 
 # ---------------------------------------------------------------------------
         if os.getenv("DO_CLEAN", 'FALSE').upper() == "TRUE":  # write out the clean task if needed, usually for realtime runs
@@ -169,14 +176,16 @@ def setup_xml(HOMErrfs, expdir):
 
     fPath = f"{expdir}/run_rocoto.sh"
     extra = ""
-    if machine in ['orion', 'hercules']:
-        extra = "\nmodule load contrib"
+    if machine in ['orion']:
+        extra = "\nmodule use /work/noaa/zrtrr/gge/rocoto/modulefiles"
+    elif machine in ['hercules']:
+        extra = "\nmodule use /work/noaa/zrtrr/gge/hercules/rocoto/modulefiles"
     elif machine in ['gaeac6']:
-        extra = "\nmodule use /ncrc/proj/epic/rocoto/modulefiles"
+        extra = "\nmodule use /gpfs/f6/arfs-gsl/world-shared/gge/rocoto/modulefiles"
     elif machine in ['wcoss2']:
         extra = "\nmodule use /apps/ops/test/nco/modulefiles/core"
     elif machine in ['derecho']:
-        extra = "\nsource /etc/profile.d/z00_modules.sh\nmodule use /glade/work/epicufsrt/contrib/derecho/modulefiles"
+        extra = "\nsource /etc/profile.d/z00_modules.sh\nmodule use /glade/work/geguo/rocoto/modulefiles"
     with open(fPath, 'w') as rocotoFile:
         text = \
             f'''#!/usr/bin/env bash
@@ -184,7 +193,7 @@ def setup_xml(HOMErrfs, expdir):
 ## */5 * * * * {fPath}
 
 source /etc/profile{extra}
-module load rocoto
+module load rocoto/1.3.7g
 cd {expdir}
 rocotorun -w rrfs.xml -d rrfs.db
 '''
