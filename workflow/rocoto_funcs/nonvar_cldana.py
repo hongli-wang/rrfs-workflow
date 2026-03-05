@@ -32,7 +32,6 @@ def nonvar_cldana(xmlFile, expdir, do_ensemble=False, do_spinup=False):
             task_id = f'{meta_id}'
         meta_bgn = ""
         meta_end = ""
-        ensindexstr = ""
     else:
         metatask = True
         task_id = f'{meta_id}_m#ens_index#'
@@ -46,7 +45,6 @@ def nonvar_cldana(xmlFile, expdir, do_ensemble=False, do_spinup=False):
 <var name="ens_index">{ens_indices}</var>'''
         meta_end = f'\
 </metatask>\n'
-        ensindexstr = "_m#ens_index#"
 
     dcTaskEnv['KEEPDATA'] = get_cascade_env(f"KEEPDATA_{task_id}".upper()).upper()
     # dependencies
@@ -66,7 +64,7 @@ def nonvar_cldana(xmlFile, expdir, do_ensemble=False, do_spinup=False):
         else:
             jedidep = f'\n    <taskdep task="jedivar"/>'
     else:
-        prep_ic_dep = f'\n    <taskdep task="prep_ic{ensindexstr}"/>'
+        prep_ic_dep = f'\n    <taskdep task="prep_ic"/>'
         if do_spinup:
             prep_ic_dep = f'\n    <taskdep task="prep_ic_spinup"/>'
     #
