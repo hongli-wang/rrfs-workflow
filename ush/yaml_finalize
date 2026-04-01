@@ -92,7 +92,8 @@ if ytype == "jedivar":
 
 # modify variable list if do_radar_ref
 do_radar_ref = (os.getenv("DO_RADAR_REF", "FASLE").upper() == "TRUE" and start_type != "cold")
-if not do_radar_ref and ytype == "jedivar":
+do_radar_ref_2nd_da = (os.getenv("DO_RADAR_REF_2nd_DA", "FASLE").upper() == "TRUE" and start_type != "cold")
+if (not do_radar_ref or do_radar_ref_2nd_da) and ytype == "jedivar":
     varlist = "state variables: &incvars [water_vapor_mixing_ratio_wrt_moist_air, air_pressure_at_surface, air_temperature, northward_wind, eastward_wind]"
     hy.modify(data, "_member/state variables", varlist, oneline_change=True)
     pos, _ = hy.get_start_pos(data, "cost function/background/state variables")
