@@ -95,7 +95,8 @@ if ytype == "jedivar":
 if ANALYSIS_VARIABLES == '0':  # if not set in the exp file, use default values
     ANALYSIS_VARIABLES = "5"
     do_radar_ref = (os.getenv("DO_RADAR_REF", "FASLE").upper() == "TRUE" and start_type != "cold")
-    if do_radar_ref:
+    do_radar_ref_2nd_da = (os.getenv("DO_RADAR_REF_2nd_DA", "FASLE").upper() == "TRUE" and start_type != "cold")
+    if do_radar_ref and not do_radar_ref_2nd_da: #do_radar_ref_2nd_da need to be false if asigned in getkf configuration
         ANALYSIS_VARIABLES = "12"
 #
 if ANALYSIS_VARIABLES == "5":
