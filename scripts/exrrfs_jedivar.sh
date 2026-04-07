@@ -48,8 +48,7 @@ mkdir -p obs ens satbias_in satbias_out
 #
 # Diffusion localization files for radar ref assimilation
 #
-if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2nd_DA} == "TRUE" ]]; then
-  #ln -snf /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/27mar2026/gen_saber_loc/diffusion_15km11levs_L60 diffloc
+if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
   ln -sf "${FIXrrfs}/${MESH_NAME}/diffloc/${MESH_NAME}_L${nlevel}_15km11levels"  diffloc
 fi
 #
@@ -144,7 +143,7 @@ case ${YAML_GEN_METHOD:-1} in
     cp "${USHrrfs}/yamltools4rrfs.py" .
     cp "${USHrrfs}/yaml_finalize" .
     ./yaml_finalize jedivar.yaml
-    if [[ ${start_type} == "warm" && ${DO_RADAR_REF_2nd_DA} == "TRUE" ]]; then
+    if [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
       cp "${EXPDIR}/config/jedivar.ref.diff.yaml" .
       sed -i \
           -e "s/@analysisDate@/${analysisDate}/" \
@@ -176,7 +175,7 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
   # check the status
   export err=$?
   err_chk
-  if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2nd_DA} == "TRUE" ]]; then
+  if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
     ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.ref.diff.yaml log.ref.out
     # check the status
     export err=$?
@@ -198,7 +197,7 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
   cp "${DATA}"/jdiag* "${COMOUT}/jedivar/${WGF}"
   cp "${DATA}"/jedivar*.yaml "${COMOUT}/jedivar/${WGF}"
   cp "${DATA}"/log.out "${COMOUT}/jedivar/${WGF}"
-  if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2nd_DA} == "TRUE" ]]; then
+  if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
     cp "${DATA}"/log.ref.out "${COMOUT}/jedivar/${WGF}"
   fi
 else
