@@ -136,6 +136,9 @@ case ${YAML_GEN_METHOD:-1} in
     cp "${USHrrfs}/hifiyaml4rrfs.py" .
     cp "${USHrrfs}/yamltools4rrfs.py" .
     cp "${USHrrfs}/yaml_finalize" .
+    if [[ ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then  # if DO_RADAR_REF_2ND_PASS, only use 5 analysis variables in the first pass
+      export ANALYSIS_VARIABLES="5"
+    fi
     ./yaml_finalize jedivar.org.yaml jedivar.yaml
     ;;
   2) # update placeholders in static yaml from gen_jedivar_yaml_nonjcb.sh
@@ -158,9 +161,6 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
 
   source prep_step
   ${cpreq} "${EXECrrfs}"/mpasjedi_variational.x .
-  if [[ ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then  # if DO_RADAR_REF_2ND_PASS, only use 5 analysis variables in the first pass
-    export ANALYSIS_VARIABLES="5"
-  fi
   ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.yaml log.out
   # check the status
   export err=$?
