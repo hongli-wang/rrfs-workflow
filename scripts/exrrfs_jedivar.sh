@@ -46,12 +46,6 @@ fi
 mkdir -p data; cd data || exit 1
 mkdir -p obs ens satbias_in satbias_out
 #
-# Diffusion localization files for radar ref assimilation
-#
-if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
-  ln -sf "${FIXrrfs}/${MESH_NAME}/diffloc/${MESH_NAME}_L${nlevel}_15km11levels"  diffloc
-fi
-#
 #  bump files and static BEC files
 #
 ln -snf "${FIXrrfs}/${MESH_NAME}/bumploc/${MESH_NAME}_L${nlevel}_${NTASKS}_401km11levels"  bumploc
@@ -136,20 +130,16 @@ export beginDate=""${CDATEm2:0:4}-${CDATEm2:4:2}-${CDATEm2:6:2}T${CDATEm2:8:2}:0
 # generate jedivar.yaml based on how YAML_GEN_METHOD is set
 case ${YAML_GEN_METHOD:-1} in
   1) # from ${PARMrrfs}
-    cp "${EXPDIR}/config/jedivar.yaml" jedivar.yaml
+    cp "${EXPDIR}/config/jedivar.yaml" jedivar.org.yaml
     cp "${EXPDIR}/config/convinfo" .
     cp "${EXPDIR}/config/satinfo" .
     cp "${USHrrfs}/hifiyaml4rrfs.py" .
     cp "${USHrrfs}/yamltools4rrfs.py" .
     cp "${USHrrfs}/yaml_finalize" .
-    ./yaml_finalize jedivar.yaml
-    if [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
-      cp "${EXPDIR}/config/jedivar.ref.diff.yaml" .
-      sed -i \
-          -e "s/@analysisDate@/${analysisDate}/" \
-          -e "s/@beginDate@/${beginDate}/" \
-	  ./jedivar.ref.diff.yaml
+    if [[ ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then  # if DO_RADAR_REF_2ND_PASS, only use 5 analysis variables in the first pass
+      export ANALYSIS_VARIABLES="5"
     fi
+    ./yaml_finalize jedivar.org.yaml jedivar.yaml
     ;;
   2) # update placeholders in static yaml from gen_jedivar_yaml_nonjcb.sh
     source "${USHrrfs}"/yaml_replace_placeholders.sh
@@ -175,10 +165,19 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
   # check the status
   export err=$?
   err_chk
-  if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
-    ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.ref.diff.yaml log.ref.out
+  #
+  # Run jedivar in the 2nd pass for reflectivity DA
+  #
+  if [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
+    export ANALYSIS_VARIABLES="12"
+    ${cpreq}  "${EXPDIR}/config/bec_diffusion.yaml" "${DATA}"/bec_diffusion.yaml
+    ln -sf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" data/diffusionloc
+    ln -snf jedivar.org.yaml jedivar.org.yaml_pass2
+    ./yaml_finalize jedivar.org.yaml_pass2 jedivar.pass2.yaml
+    ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.pass2.yaml log.pass2.out
     # check the status
     export err=$?
+    err_chk
   fi
   if [[ ${start_type} == "warm" ]] && [[ ${SNUDGETYPES} != "" ]]; then
       # pyioda libraries
@@ -197,8 +196,8 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
   cp "${DATA}"/jdiag* "${COMOUT}/jedivar/${WGF}"
   cp "${DATA}"/jedivar*.yaml "${COMOUT}/jedivar/${WGF}"
   cp "${DATA}"/log.out "${COMOUT}/jedivar/${WGF}"
-  if  [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
-    cp "${DATA}"/log.ref.out "${COMOUT}/jedivar/${WGF}"
+  if  [[ -s log.pass2.out ]]; then
+    cp "${DATA}"/log.pass2.out "${COMOUT}/jedivar/${WGF}"
   fi
 else
   echo "INFO: No DA at the cold start cycle"
