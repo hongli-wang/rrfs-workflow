@@ -171,7 +171,7 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
   if [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
     export ANALYSIS_VARIABLES="12"
     ${cpreq}  "${EXPDIR}/config/bec_diffusion.yaml" "${DATA}"/bec_diffusion.yaml
-    ln -sf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" diffusionloc
+    ln -sf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" data/diffusionloc
     ln -snf jedivar.org.yaml jedivar.org.yaml_pass2
     ./yaml_finalize jedivar.org.yaml_pass2 jedivar.pass2.yaml
     ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.pass2.yaml log.pass2.out
