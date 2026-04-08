@@ -158,6 +158,9 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
 
   source prep_step
   ${cpreq} "${EXECrrfs}"/mpasjedi_variational.x .
+  if [[ ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then  # if DO_RADAR_REF_2ND_PASS, only use 5 analysis variables in the first pass
+    export ANALYSIS_VARIABLES="5"
+  fi
   ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.yaml log.out
   # check the status
   export err=$?
@@ -166,6 +169,7 @@ if [[ ${start_type} == "warm" ]] || [[ ${start_type} == "cold" && ${COLDSTART_CY
   # Run jedivar in the 2nd pass for reflectivity DA
   #
   if [[ ${start_type} == "warm" && ${DO_RADAR_REF_2ND_PASS} == "TRUE" ]]; then
+    export ANALYSIS_VARIABLES="12"
     ${cpreq}  "${EXPDIR}/config/bec_diffusion.yaml" "${DATA}"/bec_diffusion.yaml
     ln -sf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" diffusionloc
     ln -snf jedivar.org.yaml jedivar.org.yaml_pass2
