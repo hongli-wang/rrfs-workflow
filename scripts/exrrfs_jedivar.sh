@@ -136,7 +136,9 @@ case ${YAML_GEN_METHOD:-1} in
     cp "${USHrrfs}/hifiyaml4rrfs.py" .
     cp "${USHrrfs}/yamltools4rrfs.py" .
     cp "${USHrrfs}/yaml_finalize" .
-    export ANALYSIS_VARIABLES="5"
+    if [[ ${DO_RADAR_REF} == "TRUE" ]]; then  # DO_RADAR_REF: run jedivar twice and use 5 analysis variables in the first pass
+      export ANALYSIS_VARIABLES="5"
+    fi
     ./yaml_finalize jedivar.org.yaml jedivar.yaml
     ;;
   2) # update placeholders in static yaml from gen_jedivar_yaml_nonjcb.sh
