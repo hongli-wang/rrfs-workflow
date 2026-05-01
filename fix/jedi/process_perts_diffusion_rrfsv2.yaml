@@ -1,0 +1,66 @@
+geometry:
+  nml_file: ./namelist.atmosphere
+  streams_file: ./streams.atmosphere
+background:
+  state variables: &vars
+  - air_temperature
+  - eastward_wind
+  - northward_wind
+  - water_vapor_mixing_ratio_wrt_moist_air
+  - air_pressure_at_surface
+  - cloud_liquid_water
+  - cloud_liquid_ice
+  - rain_water
+  - snow_water
+  - graupel
+  - equivalent_reflectivity_factor
+  filename: "./mpasout.nc"
+  date: &date '@analysisDate@'
+input variables: *vars
+ensemble:
+  members from template:
+    template:
+      date: *date
+      state variables: *vars
+      stream name: ensemble
+      filename: ./data/ens/mem%iMember%.nc
+    pattern: "%iMember%"
+    start: 1
+    zero padding: 3
+    nmembers: 30
+bands:
+- band:  # band 1
+    filter:
+    - saber block name: diffusion filter
+      read:
+        groups:
+        - variables:
+          - eastward_wind
+          - northward_wind
+          - air_temperature
+          - water_vapor_mixing_ratio_wrt_moist_air
+          - air_pressure_at_surface
+          - cloud_liquid_water
+          - cloud_liquid_ice
+          - rain_water
+          - snow_water
+          - graupel
+          - equivalent_reflectivity_factor
+          - air_pressure_at_surface
+          horizontal:
+            filepath: data/diffusionloc/mpas_conus3km.diffusion_hz
+  output:
+    model write:
+      stream name: control 
+      filename: data/ens_perts_diffusion/wb1_mem%iMember% 
+      member pattern: "%iMember%"
+      #start: 1
+      #zero padding: 3
+- output:
+    model write:
+      stream name: control 
+      filename: data/ens_perts_diffusion/wb2_mem%iMember% 
+      member pattern: "%iMember%"
+      #start: 1
+      #zero padding: 3
+recursive filters: true

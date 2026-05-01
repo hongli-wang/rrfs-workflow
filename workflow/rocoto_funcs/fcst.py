@@ -104,6 +104,13 @@ def fcst(xmlFile, expdir, do_ensemble=False, dcEnsGrpInfo=None, do_spinup=False)
         else:
             cloudana_dep = f'\n    <taskdep task="nonvar_cldana{ensindexstr}"/>'
 
+    if os.getenv("DO_PROCESS_PERTS", "FALSE").upper() == "TRUE":
+        do_da = True
+        if do_spinup:
+            process_perts_dep = f'\n    <taskdep task="process_perts_spinup"/>'
+        else:
+            process_perts_dep = f'\n    <taskdep task="process_perts"/>'
+
     if os.getenv("DO_JEDI", "FALSE").upper() == "TRUE":
         do_da = True
         if os.getenv("DO_ENSEMBLE", "FALSE").upper() == "TRUE":

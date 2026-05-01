@@ -83,6 +83,10 @@ export WALLTIME_PREP_IC=${WALLTIME_PREP_IC:-"00:10:00"}
 export NODES_PREP_LBC=${NODES_PREP_LBC:-"<nodes>1:ppn=1</nodes>"}
 export WALLTIME_PREP_LBC=${WALLTIME_PREP_LBC:-"00:30:00"}
 
+# process perts
+export NODES_PROCESS_PERTS=${NODES_PROCESS_PERTS:-"<nodes>20:ppn=40</nodes>"}
+export WALLTIME_PROCESS_PERTS=${WALLTIME_PROCESS_PERTS:-"00:15:00"}
+
 # da
 export NODES_DA=${NODES_DA:-"<nodes>1:ppn=40</nodes>"}
 

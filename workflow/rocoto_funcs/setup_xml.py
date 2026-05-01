@@ -14,6 +14,7 @@ from rocoto_funcs.lbc import lbc
 from rocoto_funcs.prep_ic import prep_ic
 from rocoto_funcs.prep_lbc import prep_lbc
 from rocoto_funcs.mpas_blend import mpas_blend
+from rocoto_funcs.process_perts import process_perts 
 from rocoto_funcs.jedivar import jedivar
 from rocoto_funcs.fcst import fcst
 from rocoto_funcs.smart_ens_groups import smart_ens_groups
@@ -94,12 +95,16 @@ def setup_xml(HOMErrfs, expdir):
                 prep_lbc(xmlFile, expdir)
                 # spin up line
                 prep_ic(xmlFile, expdir, spinup_mode=1)
+                #if os.getenv("DO_PROCESS_PERTS", "FALSE").upper() == "TRUE":
+                process_perts(xmlFile, expdir, spinup_mode=1)
                 jedivar(xmlFile, expdir, spinup_mode=1)
                 if os.getenv("DO_NONVAR_CLOUD_ANA", "FALSE").upper() == "TRUE":
                     nonvar_cldana(xmlFile, expdir, spinup_mode=1)
                 fcst(xmlFile, expdir, do_spinup=True)
                 # prod line
                 prep_ic(xmlFile, expdir, spinup_mode=-1)
+                #if os.getenv("DO_PROCESS_PERTS", "FALSE").upper() == "TRUE":
+                process_perts(xmlFile, expdir, spinup_mode=-1)
                 jedivar(xmlFile, expdir, spinup_mode=-1)
                 if os.getenv("DO_NONVAR_CLOUD_ANA", "FALSE").upper() == "TRUE":
                     nonvar_cldana(xmlFile, expdir, spinup_mode=-1)
@@ -113,6 +118,8 @@ def setup_xml(HOMErrfs, expdir):
                     prep_chem(xmlFile, expdir)
                 if os.getenv("DO_BLENDING", "FALSE").upper() == "TRUE":
                     mpas_blend(xmlFile, expdir)
+                #if os.getenv("DO_PROCESS_PERTS", "FALSE").upper() == "TRUE":
+                process_perts(xmlFile, expdir)
                 if os.getenv("DO_JEDI", "FALSE").upper() == "TRUE":
                     jedivar(xmlFile, expdir)
                 if os.getenv("DO_NONVAR_CLOUD_ANA", "FALSE").upper() == "TRUE":

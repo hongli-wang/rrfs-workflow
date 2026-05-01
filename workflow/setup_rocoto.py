@@ -104,6 +104,9 @@ if os.getenv("DO_JEDI", 'false').upper() == "TRUE":
         shutil.copy(f'{HOMErrfs}/parm/jedivar.yaml', f'{exp_configdir}/jedivar.yaml')
         shutil.copy(f'{HOMErrfs}/parm/bec_bump.yaml', f'{exp_configdir}/bec_bump.yaml')
         shutil.copy(f'{HOMErrfs}/parm/bec_diffusion.yaml', f'{exp_configdir}/bec_diffusion.yaml')
+    # copy process_perts.yaml to exp_configdir
+    if os.getenv('DO_PROCESS_PERTS', 'FALSE').upper() == "TRUE":
+        shutil.copy(f'{HOMErrfs}/parm/process_perts_nicas_v1.yaml', f'{exp_configdir}/process_perts_nicas.yaml')
 #
 if os.getenv('DO_HOFX', 'FALSE').upper() == "TRUE":
     shutil.copy(f'{HOMErrfs}/parm/hofx.yaml', f'{exp_configdir}/hofx.yaml')
