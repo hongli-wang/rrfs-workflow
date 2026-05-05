@@ -109,6 +109,13 @@ def jedivar(xmlFile, expdir, spinup_mode=0):
         prep_ic_dep = '<taskdep task="prep_ic"/>'
     # ~~~~
 
+    do_ens_multi_dep = ""
+    if os.getenv('DO_ENS_MULTI_LOCALIZATION', 'FALSE').upper() == 'TRUE':
+        if do_spinup:
+            do_ens_multi_dep = '<taskdep task="process_perts_spinup"/>'
+        else:
+            do_ens_multi_dep = '<taskdep task="process_perts"/>'
+
     mpas_blend_dep = ""
     if os.getenv("DO_BLENDING", "FALSE").upper() == "TRUE":
         if do_spinup:
@@ -125,6 +132,7 @@ def jedivar(xmlFile, expdir, spinup_mode=0):
   <dependency>
   <and>{timedep}
     {prep_ic_dep}{mpas_blend_dep}
+    {do_ens_multi_dep}
     {iodadep}{ens_dep}
   </and>
   </dependency>'''

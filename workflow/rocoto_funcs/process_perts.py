@@ -76,10 +76,17 @@ def process_perts(xmlFile, expdir, spinup_mode=0):
             ens_dep = ens_dep + "\n    </and>"
         #ens_dep = ens_dep + "\n    </or>"
 
+    # ~~~~
+    if do_spinup:
+        prep_ic_dep = '<taskdep task="prep_ic_spinup"/>'
+    else:
+        prep_ic_dep = '<taskdep task="prep_ic"/>'
+    # ~~~~
+
     dependencies = f'''
   <dependency>
   <and>{timedep}
-    {ens_dep}
+    {prep_ic_dep}{ens_dep}
   </and>
   </dependency>'''
     #
