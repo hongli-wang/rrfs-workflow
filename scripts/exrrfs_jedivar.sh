@@ -50,6 +50,8 @@ mkdir -p obs ens satbias_in satbias_out
 #
 ln -snf "${FIXrrfs}/${MESH_NAME}/bumploc/${MESH_NAME}_L${nlevel}_${NTASKS}_401km11levels"  bumploc
 
+#ln -snf /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/dev/RRFSv2X_MSDA_REF_04/conus3km60l/stmp/20240508/rrfs_process_perts_04_v2.1.3/det/ens_perts_diffusion . 
+ln -snf "${UMBRELLA_PROCESS_PERTS_DATA}"/ens_perts_diffusion .   
 if [[ ${STATIC_BEC_MODEL} == "GSIBEC" ]]; then
   # gsibec
   ln -snf "${FIXrrfs}/gsi_bec/berror_stats" "${DATA}"/berror_stats
@@ -153,7 +155,16 @@ case ${YAML_GEN_METHOD:-1} in
     ;;
 esac
 
+${cpreq} /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/dev/jedivar.hyb.ms.diffusion_rrfsv2.yaml jedivar.ms.yaml
+sed -i \
+        -e "s/@analysisDate@/${ANALYSIS_DATE}/" \
+        -e "s/@beginDate@/${BEGIN_DATE}/" \
+       ./jedivar.ms.yaml
+
 if [[ ${START_TYPE} == "warm" ]] || [[ ${START_TYPE} == "cold" && ${COLDSTART_CYCS_DO_DA^^} == "TRUE" ]]; then
+ 
+  ln -sf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" data/diffusionloc
+
   # run mpasjedi_variational.x
   #export OOPS_TRACE=1
   #export OOPS_DEBUG=1
@@ -161,10 +172,11 @@ if [[ ${START_TYPE} == "warm" ]] || [[ ${START_TYPE} == "cold" && ${COLDSTART_CY
 
   source prep_step
   ${cpreq} "${EXECrrfs}"/mpasjedi_variational.x .
-  ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.yaml log.out
+  ${MPI_RUN_CMD} ./mpasjedi_variational.x jedivar.ms.yaml log.out
   # check the status
   export err=$?
   err_chk
+  exit 
   #
   # Run jedivar in the 2nd pass for reflectivity DA
   #

@@ -19,9 +19,11 @@ export USHrrfs=${USHrrfs:-${HOMErrfs}/ush}
 #
 if [[ "${DO_SPINUP:-FALSE}" == "TRUE" ]];  then
   export UMBRELLA_PREP_IC_DATA=${UMBRELLA_PREP_IC_DATA:-${DATAROOT}/${RUN}_prep_ic_spinup_${cyc}_${rrfs_ver}/${WGF}}
+  export UMBRELLA_PROCESS_PERTS_DATA=${UMBRELLA_PROCESS_PERTS_DATA:-${DATAROOT}/${RUN}_process_perts_spinup_${cyc}_${rrfs_ver}/${WGF}}
   export UMBRELLA_JEDIVAR_DATA=${UMBRELLA_JEDIVAR_DATA:-${DATAROOT}/${RUN}_jedivar_spinup_${cyc}_${rrfs_ver}/${WGF}}
 else
   export UMBRELLA_PREP_IC_DATA=${UMBRELLA_PREP_IC_DATA:-${DATAROOT}/${RUN}_prep_ic_${cyc}_${rrfs_ver}/${WGF}}
+  export UMBRELLA_PROCESS_PERTS_DATA=${UMBRELLA_PROCESS_PERTS_DATA:-${DATAROOT}/${RUN}_process_perts_${cyc}_${rrfs_ver}/${WGF}}
   export UMBRELLA_JEDIVAR_DATA=${UMBRELLA_JEDIVAR_DATA:-${DATAROOT}/${RUN}_jedivar_${cyc}_${rrfs_ver}/${WGF}}
 fi
 export pid=${pid:-$$}
