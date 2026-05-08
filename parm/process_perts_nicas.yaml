@@ -1,0 +1,91 @@
+geometry:
+  nml_file: ./namelist.atmosphere
+  streams_file: ./streams.atmosphere
+background:
+  state variables: &vars
+  - air_temperature
+  - eastward_wind
+  - northward_wind
+  - water_vapor_mixing_ratio_wrt_moist_air
+  - air_pressure_at_surface
+  - cloud_liquid_water
+  - cloud_liquid_ice
+  - rain_water
+  - snow_water
+  - graupel
+  - equivalent_reflectivity_factor
+  - upward_air_velocity
+  filename: "./mpasout.nc"
+  date: &date '2024-05-08T04:00:00Z'
+input variables: *vars
+ensemble:
+  members from template:
+    template:
+      date: *date
+      state variables: *vars
+      stream name: ensemble
+      filename: ./data/ens/mem%iMember%.nc
+    pattern: "%iMember%"
+    start: 1
+    zero padding: 3
+    nmembers: 30
+bands:
+- band:
+    filter:
+    - saber block name: BUMP_NICASFilter
+      read:
+        general:
+          universe length-scale: 3000.0e3
+        drivers:
+          multivariate strategy: univariate
+          compute nicas: true
+        nicas:
+          filter mode: true
+          filter resolution: 6
+          explicit length-scales: true
+          horizontal length-scale:
+          - groups:
+            - eastward_wind
+            - northward_wind
+            - air_temperature
+            - water_vapor_mixing_ratio_wrt_moist_air
+            - air_pressure_at_surface
+            - cloud_liquid_water
+            - cloud_liquid_ice
+            - rain_water
+            - snow_water
+            - graupel
+            - equivalent_reflectivity_factor
+            - upward_air_velocity
+            value: 400.0e3
+          vertical length-scale:
+          - groups:
+            - eastward_wind
+            - northward_wind
+            - air_temperature
+            - water_vapor_mixing_ratio_wrt_moist_air
+            - air_pressure_at_surface
+            - cloud_liquid_water
+            - cloud_liquid_ice
+            - rain_water
+            - snow_water
+            - graupel
+            - equivalent_reflectivity_factor
+            - upward_air_velocity
+            value: 0.0
+          same horizontal convolution: true
+  output:
+    model write:
+      stream name: control 
+      filename: data/ens_perts_bump/wb1_mem%iMember% 
+      member pattern: "%iMember%"
+      #start: 1
+      #zero padding: 3
+- output:
+    model write:
+      stream name: control 
+      filename: data/ens_perts_bump/wb2_mem%iMember% 
+      member pattern: "%iMember%"
+      #start: 1
+      #zero padding: 3
+recursive filters: true
