@@ -72,7 +72,6 @@ cost function:
     - cldfrac
     - equivalent_reflectivity_factor
     - w
-    - upward_air_velocity
     filename: mpasout.nc
     date: *ANALYSIS_DATE
   background error:

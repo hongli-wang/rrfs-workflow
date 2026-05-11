@@ -14,7 +14,7 @@ background:
   - snow_water
   - graupel
   - equivalent_reflectivity_factor
-  - upward_air_velocity
+  #- upward_air_velocity
   filename: "./mpasout.nc"
   date: &date '2024-05-08T04:00:00Z'
 input variables: *vars
@@ -56,7 +56,7 @@ bands:
             - snow_water
             - graupel
             - equivalent_reflectivity_factor
-            - upward_air_velocity
+            #- upward_air_velocity
             value: 400.0e3
           vertical length-scale:
           - groups:
@@ -71,7 +71,7 @@ bands:
             - snow_water
             - graupel
             - equivalent_reflectivity_factor
-            - upward_air_velocity
+            #- upward_air_velocity
             value: 0.0
           same horizontal convolution: true
   output:
