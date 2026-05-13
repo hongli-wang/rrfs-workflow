@@ -155,7 +155,8 @@ case ${YAML_GEN_METHOD:-1} in
     ;;
 esac
 
-${cpreq} /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/dev/jedivar.hyb.ms.diffusion_rrfsv2.yaml jedivar.ms.yaml
+#${cpreq} /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/dev/jedivar.hyb.ms.diffusion_rrfsv2.yaml jedivar.ms.yaml
+${cpreq} /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/dev/rrfs-workflow/parm/jedivar.ms.mix_rrfsv2.yaml  jedivar.ms.yaml
 sed -i \
         -e "s/@analysisDate@/${ANALYSIS_DATE}/" \
         -e "s/@beginDate@/${BEGIN_DATE}/" \
@@ -164,7 +165,7 @@ sed -i \
 if [[ ${START_TYPE} == "warm" ]] || [[ ${START_TYPE} == "cold" && ${COLDSTART_CYCS_DO_DA^^} == "TRUE" ]]; then
  
   ln -sf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" data/diffusionloc
-
+  ln -snf /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/gen_saber_loc/diffusion_30km11levs_L60_i20000 data/diffusionloc_30km
   # run mpasjedi_variational.x
   #export OOPS_TRACE=1
   #export OOPS_DEBUG=1

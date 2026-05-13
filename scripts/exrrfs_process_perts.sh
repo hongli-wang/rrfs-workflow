@@ -51,7 +51,7 @@ mkdir -p obs ens satbias_in satbias_out
 #
 ln -snf "${FIXrrfs}/${MESH_NAME}/bumploc/${MESH_NAME}_L${nlevel}_${NTASKS}_401km11levels"  bumploc
 ln -snf "${FIXrrfs}/${MESH_NAME}/diffusionloc/${MESH_NAME}_L${nlevel}_15km11levels" diffusionloc
-
+ln -snf /gpfs/f6/arfs-gsl/scratch/Hongli.Wang/gen_saber_loc/diffusion_30km11levs_L60_i20000 diffusionloc_30km
 #
 #  find ensemble forecasts based on user settings
 #
